@@ -73,7 +73,7 @@ userSchema.pre("save", async function () {
 
 // compare password method
 userSchema.methods = {
-    comparePassword : async function (
+    comparePassword: async function (
         plainPassword: string
     ) {
         return await bcrypt.compare(
@@ -83,7 +83,7 @@ userSchema.methods = {
     }
 }
 
-const User =
+const UserMOdel =
     mongoose.models.User || mongoose.model("User", userSchema);
 
-export default User;
+export default UserMOdel;
