@@ -10,19 +10,25 @@ import { useForm } from "react-hook-form";
 import { zSchema } from '@/lib/zod.schema';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { website_register } from '@/routes/website.routes';
+import { website_login, website_register } from '@/routes/website.routes';
 
-const Login = () => {
+const Register = () => {
 
     const [isTypePassword, setIsTypePassword] = useState(true)
 
     // pic email password form zod schema
     const formSchema = zSchema.pick({
+        name: true,
         email: true,
-    }).extend({ password: z.string().min(3, "Please enter your password") })
+        password: true,
+        confirmPassword: true
+    }).refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords do not match",
+        path: ["confirmPassword"],
+    });
 
     // type decleration
-    type LoginFormValues = z.infer<typeof formSchema>;
+    type RegisterFormValues = z.infer<typeof formSchema>;
 
     // react hook form configuration
     const {
@@ -32,16 +38,18 @@ const Login = () => {
             errors,
             isSubmitting
         }
-    } = useForm<LoginFormValues>({
+    } = useForm<RegisterFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            name: "",
             email: "",
             password: "",
+            confirmPassword: ""
         },
     })
 
     // login submit handler 
-    const handleLoginSubmit = async (data: LoginFormValues) => {
+    const handleRegisterSubmit = async (data: RegisterFormValues) => {
         console.log("Form Submitted Successfully:", data);
     }
 
@@ -55,8 +63,15 @@ const Login = () => {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <form onSubmit={handleSubmit(handleLoginSubmit)}>
+                <form onSubmit={handleSubmit(handleRegisterSubmit)}>
                     <FieldGroup>
+                        <Field>
+                            <FieldLabel htmlFor='name'>Name</FieldLabel>
+                            <Input type='text' placeholder='Jinnah Akondo' {...register("name")} />
+                            {errors.name && (
+                                <p className="text-xs font-medium text-destructive mt-1">{errors.name.message}</p>
+                            )}
+                        </Field>
                         <Field>
                             <FieldLabel htmlFor="email">Email</FieldLabel>
                             <Input
@@ -73,12 +88,25 @@ const Login = () => {
                         <Field >
                             <div className="flex items-center">
                                 <FieldLabel htmlFor="password">Password</FieldLabel>
-                                <a
-                                    href="#"
-                                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                                >
-                                    Forgot your password?
-                                </a>
+                            </div>
+                            <div>
+                                <Input
+                                    id="password"
+                                    type={isTypePassword ? "password" : "text"}
+                                    placeholder='******'
+                                    className="pr-10"
+                                    {...register("password")}
+                                />
+
+                            </div>
+                            {errors.password && (
+                                <p className="text-xs font-medium text-destructive mt-1">{errors.password.message}</p>
+                            )}
+                        </Field>
+
+                        <Field >
+                            <div className="flex items-center">
+                                <FieldLabel htmlFor="password">Password</FieldLabel>
                             </div>
                             <div className='relative'>
                                 <Input
@@ -86,7 +114,7 @@ const Login = () => {
                                     type={isTypePassword ? "password" : "text"}
                                     placeholder='******'
                                     className="pr-10"
-                                    {...register("password")}
+                                    {...register("confirmPassword")}
                                 />
 
                                 <button
@@ -97,8 +125,8 @@ const Login = () => {
                                     {isTypePassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
                             </div>
-                            {errors.password && (
-                                <p className="text-xs font-medium text-destructive mt-1">{errors.password.message}</p>
+                            {errors.confirmPassword && (
+                                <p className="text-xs font-medium text-destructive mt-1">{errors.confirmPassword.message}</p>
                             )}
                         </Field>
 
@@ -110,7 +138,7 @@ const Login = () => {
                                 Login with Google
                             </Button>
                             <FieldDescription className="text-center mt-4">
-                                Don&apos;t have an account? <a href={website_register}>Sign up</a>
+                                Already have an account? <a href={website_login}>Log in</a>
                             </FieldDescription>
                         </Field>
                     </FieldGroup>
@@ -120,4 +148,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;
