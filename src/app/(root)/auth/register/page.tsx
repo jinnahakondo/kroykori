@@ -10,11 +10,15 @@ import { useForm } from "react-hook-form";
 import { zSchema } from '@/lib/zod.schema';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { website_login, website_register } from '@/routes/website.routes';
+import { website_login } from '@/routes/website.routes';
+import axiosInstance from '@/lib/axios';
+import { useRouter } from 'next/navigation';
 
 const Register = () => {
 
     const [isTypePassword, setIsTypePassword] = useState(true)
+
+    const router = useRouter()
 
     // pic email password form zod schema
     const formSchema = zSchema.pick({
@@ -50,7 +54,10 @@ const Register = () => {
 
     // login submit handler 
     const handleRegisterSubmit = async (data: RegisterFormValues) => {
-        console.log("Form Submitted Successfully:", data);
+        const result = await axiosInstance.post("/api/users", data)
+        if (result.data.success) {
+            router.push(website_login)
+        }
     }
 
     return (
