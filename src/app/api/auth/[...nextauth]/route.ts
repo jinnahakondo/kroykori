@@ -1,14 +1,73 @@
+import { connectDb } from "@/lib/db.connection"
+import UserMOdel from "@/models/user.model"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
 export const authOptions = {
     providers: [
         CredentialsProvider({
+            name: 'Credentials',
+            credentials: {
+                email: { label: "email", type: "email" },
+                password: { label: "Password", type: "password" }
+            },
             async authorize(credentials, req) {
-                console.log(credentials);
+
+                if (!credentials?.email || !credentials?.password) {
+                    return null;
+                }
+
+                // db connection 
+                await connectDb()
+
+                // find user 
+                const user = await UserMOdel.findOne({ email: credentials?.email }).select("+password")
+                if (!user) {
+                    return null
+                }
+
+                // compare password
+                const isPasswordMatched =
+                    await user.comparePassword(
+                        credentials.password
+                    )
+
+                if (!isPasswordMatched) {
+                    return null
+                }
+
+                // success login
+                return {
+                    id: user._id.toString(),
+                    name: user.name,
+                    email: user.email,
+                }
+
             }
         })
     ],
+    callbacks: {
+        async redirect({ url, baseUrl }: { url: string, baseUrl: string }) {
+            return baseUrl
+        },
+        // Pass user details to the token
+        async jwt({ token, user }: { token: any; user: any }) {
+            if (user) {
+                token.id = user.id;
+                token.role = user.role;
+            }
+            return token;
+        },
+        // Pass token details to the session so it can be accessed in components
+        async session({ session, token }: { session: any; token: any }) {
+            if (token) {
+                session.user.id = token.id;
+                session.user.role = token.role;
+            }
+            return session;
+        }
+    },
+    secret: process.env.NEXTAUTH_SECRET,
 }
 
 const handler = NextAuth(authOptions)

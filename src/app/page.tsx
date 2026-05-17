@@ -1,10 +1,15 @@
-import { Button } from "@/components/ui/button";
+
+import { website_login } from "@/routes/website.routes";
+
+import Link from "next/link";
 
 
 export default function Home() {
+
   return (
     <div>
-      <Button>Click Me</Button>
+      <Link href={website_login}>Click Me</Link>
+
     </div>
   );
 }

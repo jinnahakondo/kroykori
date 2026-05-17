@@ -11,10 +11,15 @@ import { zSchema } from '@/lib/zod.schema';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { website_register } from '@/routes/website.routes';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 const Login = () => {
 
     const [isTypePassword, setIsTypePassword] = useState(true)
+
+    const router: AppRouterInstance = useRouter();
 
     // pic email password form zod schema
     const formSchema = zSchema.pick({
@@ -42,7 +47,12 @@ const Login = () => {
 
     // login submit handler 
     const handleLoginSubmit = async (data: LoginFormValues) => {
-        console.log("Form Submitted Successfully:", data);
+        // console.log("Form Submitted Successfully:", data);
+        const res = await signIn("credentials", { email: data.email, password: data.password, redirect: false })
+        if (res?.ok) {
+            router.push(res?.url || '/')
+        }
+
     }
 
     return (
