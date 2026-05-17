@@ -42,11 +42,9 @@ const userSchema = new mongoose.Schema(
             trim: true,
         },
 
-        avatar: {
-            url: {
-                type: String,
-                trim: true,
-            },
+        image: {
+            type: String,
+            trim: true
         },
 
         isEmailVerified: {
