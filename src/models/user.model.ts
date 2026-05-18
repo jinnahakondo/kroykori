@@ -4,10 +4,6 @@ import bcrypt from "bcryptjs";
 const userSchema = new mongoose.Schema(
     {
         _id: mongoose.Schema.Types.ObjectId,
-        provider: {
-            type: String,
-            enum: ["credential", "google",],
-        },
         role: {
             type: String,
             enum: ["user", "admin"],
