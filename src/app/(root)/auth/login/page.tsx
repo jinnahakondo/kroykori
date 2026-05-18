@@ -116,7 +116,11 @@ const Login = () => {
                             <Button type="submit" disabled={isSubmitting} className="w-full">
                                 {isSubmitting ? "Logging in..." : "Login"}
                             </Button>
-                            <Button variant="outline" type="button" className="w-full mt-2">
+                            <Button
+                                onClick={() => signIn("google")}
+                                variant="outline"
+                                type="button"
+                                className="w-full mt-2">
                                 Login with Google
                             </Button>
                             <FieldDescription className="text-center mt-4">
