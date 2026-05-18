@@ -13,6 +13,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { website_login } from '@/routes/website.routes';
 import axiosInstance from '@/lib/axios';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 
 const Register = () => {
 
@@ -141,7 +142,11 @@ const Register = () => {
                             <Button type="submit" disabled={isSubmitting} className="w-full">
                                 {isSubmitting ? "Logging in..." : "Login"}
                             </Button>
-                            <Button variant="outline" type="button" className="w-full mt-2">
+                            <Button
+                                onClick={() => signIn("google")}
+                                variant="outline"
+                                type="button"
+                                className="w-full mt-2">
                                 Login with Google
                             </Button>
                             <FieldDescription className="text-center mt-4">
