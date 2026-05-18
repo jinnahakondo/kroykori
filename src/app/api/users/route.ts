@@ -1,5 +1,5 @@
 import { connectDb } from "@/lib/db.connection";
-import { response } from "@/lib/helperfunction";
+import { catchError, response } from "@/lib/helperfunction";
 import { createUser } from "@/services/user.service";
 
 export async function POST(req: Request) {
@@ -21,10 +21,6 @@ export async function POST(req: Request) {
         });
 
     } catch (error: any) {
-        return response({
-            success: false,
-            message: error.message || "User creation failed",
-            statusCode: 500,
-        });
+        return catchError(error, "Failed to create user");
     }
 }
