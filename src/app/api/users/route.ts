@@ -24,7 +24,7 @@ export async function POST(req: Request) {
             .setProtectedHeader({ alg: "HS256" })
             .sign(secret)
 
-        await sendVerificationEmail("Verify Your Email", user.email, emailVerificationLink(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-email?token=${token}`))
+        await sendVerificationEmail("Verify Your Email", user.email, emailVerificationLink(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-email/${token}`))
 
         return response({
             success: true,
