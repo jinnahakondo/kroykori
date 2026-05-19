@@ -53,11 +53,16 @@ const Register = () => {
         },
     })
 
-    // login submit handler 
+    // register submit handler 
     const handleRegisterSubmit = async (data: RegisterFormValues) => {
-        const result = await axiosInstance.post("/api/users", data)
-        if (result.data.success) {
-            router.push(website_login)
+        try {
+            const result = await axiosInstance.post("/api/users", data)
+            if (result.data.success) {
+                alert("registration successful. Please check your email to verify your account.")
+                router.push(website_login)
+            }
+        } catch (error) {
+            alert("Failed to create account. Please try again.")
         }
     }
 
@@ -140,7 +145,7 @@ const Register = () => {
 
                         <Field>
                             <Button type="submit" disabled={isSubmitting} className="w-full">
-                                {isSubmitting ? "Logging in..." : "Login"}
+                                {isSubmitting ? "Creating Account..." : "Create Account"}
                             </Button>
                             <Button
                                 onClick={() => signIn("google")}
