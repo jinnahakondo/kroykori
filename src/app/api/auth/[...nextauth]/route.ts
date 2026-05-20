@@ -1,5 +1,5 @@
 import { connectDb } from "@/lib/db.connection"
-import UserMOdel from "@/models/user.model"
+import UserModel from "@/models/user.model"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google";
@@ -22,7 +22,7 @@ export const authOptions = {
                 await connectDb()
 
                 // find user 
-                const user = await UserMOdel.findOne({ email: credentials?.email }).select("+password")
+                const user = await UserModel.findOne({ email: credentials?.email }).select("+password")
                 if (!user) {
                     return null
                 }

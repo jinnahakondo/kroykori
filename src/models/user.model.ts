@@ -81,7 +81,7 @@ userSchema.methods.comparePassword =
     };
 
 
-const UserMOdel =
+const UserModel =
     mongoose.models.User || mongoose.model("User", userSchema);
 
-export default UserMOdel;
+export default UserModel;
