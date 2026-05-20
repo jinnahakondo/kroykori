@@ -14,6 +14,7 @@ import { website_register } from '@/routes/website.routes';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { toast } from 'sonner';
 
 const Login = () => {
 
@@ -49,9 +50,12 @@ const Login = () => {
     const handleLoginSubmit = async (data: LoginFormValues) => {
         // console.log("Form Submitted Successfully:", data);
         const res = await signIn("credentials", { email: data.email, password: data.password, redirect: false })
-        if (res?.ok) {
-            router.push(res?.url || '/')
+        console.log(res);
+        if (!res?.ok) {
+            toast.error(res?.error)
+            return;
         }
+        router.push(res?.url || '/')
 
     }
 

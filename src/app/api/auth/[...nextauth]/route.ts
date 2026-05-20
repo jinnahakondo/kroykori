@@ -37,6 +37,11 @@ export const authOptions = {
                     return null
                 }
 
+                if (!user.isEmailVerified) {
+                    throw new Error("Please verify your email before logging in.")
+
+                }
+
                 // success login
                 return {
                     id: user._id.toString(),

@@ -13,6 +13,7 @@ import {
     MailCheck,
     XCircle,
 } from "lucide-react";
+import { website_login } from "@/routes/website.routes";
 
 type TStatus = "loading" | "success" | "error";
 
@@ -91,7 +92,7 @@ export default function VerifyEmail({ token }: { token: string }) {
                     {status === "success" && (
                         <Button asChild className="w-full">
                             <Link
-                                href="/login"
+                                href={website_login}
                                 className="flex items-center gap-2"
                             >
                                 <MailCheck className="h-4 w-4" />
