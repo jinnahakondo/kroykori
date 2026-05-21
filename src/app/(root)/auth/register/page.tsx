@@ -31,7 +31,7 @@ import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { } from "sonner";
 import z from "zod";
-import { toast } from "sonner";
+import { showErrorToast, showSuccessToast } from "@/lib/Toast";
 
 const Register = () => {
     const router = useRouter();
@@ -89,14 +89,14 @@ const Register = () => {
             const result = await axiosInstance.post("/api/users", userData);
 
             if (result.data.success) {
-                toast.success(
+                showSuccessToast(
                     "Registration successful. Please verify your email."
                 );
                 router.push(website_login);
             }
 
         } catch (error: any) {
-            toast.error(
+            showErrorToast(
                 error?.response?.data?.message ||
                 "Failed to create account"
             );

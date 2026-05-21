@@ -1,6 +1,6 @@
 type TResponse<T> = {
     success: boolean;
-    message?: string;
+    message: string;
     statusCode: number;
     data?: T;
 };
@@ -51,7 +51,7 @@ export const catchError = (error: any, customMessage?: string) => {
         };
     }
 
-    return response({
+    return Response.json({
         success: false,
         statusCode: error.code || 500,
         ...errorObj,

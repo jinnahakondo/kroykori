@@ -1,9 +1,8 @@
-import { emailVerificationLink } from "@/email/emailVerificationLink";
 import { connectDb } from "@/lib/db.connection";
 import { catchError, response } from "@/lib/helperfunction";
 import { sendVerificationEmail } from "@/lib/sendVerificationEmail";
 import { createUser } from "@/services/user.service";
-import { SignJWT } from "jose";
+
 
 export async function POST(req: Request) {
     try {
@@ -16,15 +15,10 @@ export async function POST(req: Request) {
         // service call
         const user = await createUser(body);
 
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET)
-
-        const token = await new SignJWT({ userId: String(user._id), })
-            .setIssuedAt()
-            .setExpirationTime("1h")
-            .setProtectedHeader({ alg: "HS256" })
-            .sign(secret)
-
-        await sendVerificationEmail("Verify Your Email", user.email, emailVerificationLink(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-email/${token}`))
+        await sendVerificationEmail({
+            userId: String(user._id),
+            email: user.email
+        })
 
         return response({
             success: true,

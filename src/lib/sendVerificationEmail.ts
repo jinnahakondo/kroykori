@@ -1,30 +1,33 @@
-import nodemailer from 'nodemailer';
-import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import { emailVerificationLink } from "@/email/emailVerificationLink";
+import { generateToken } from "./generateToken";
+import { sendMail } from "./sendMail";
 
-const transportOptions: SMTPTransport.Options = {
-    host: process.env.NODEMAILER_HOST,
-    port: Number(process.env.NODEMAILER_PORT),
-    secure: false,
-    auth: {
-        user: process.env.NODEMAILER_USER,
-        pass: process.env.NODEMAILER_PASS,
-    },
+
+
+type SendVerificationProps = {
+    userId: string;
+    email: string;
 };
 
-const transporter = nodemailer.createTransport(transportOptions);
+export const sendVerificationEmail = async ({
+    userId,
+    email,
+}: SendVerificationProps) => {
+    const token = await generateToken({
+        payload: {
+            userId,
+        },
+        expiresIn: "1h",
+    });
 
-export const sendVerificationEmail = async (subject: string, receiver: string, body: string) => {
-    const mailOptions = {
-        from: `Kroykori <${process.env.NODEMAILER_USER}>`,
-        to: receiver,
-        subject,
-        html: body,
-    };
+    const verificationUrl =
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-email/${token}`;
 
-    try {
-        await transporter.sendMail(mailOptions);
-        return { success: true };
-    } catch (error: any) {
-        return { success: false, message: error.message || "Something went wrong" };
-    }
+    await sendMail(
+        "Verify Your Email",
+        email,
+        emailVerificationLink(verificationUrl)
+    );
+
+    return token;
 };

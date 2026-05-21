@@ -24,7 +24,7 @@ export const authOptions = {
                 // find user 
                 const user = await UserModel.findOne({ email: credentials?.email }).select("+password")
                 if (!user) {
-                    return null
+                    throw new Error("Invalid credentials")
                 }
 
                 // compare password
@@ -34,7 +34,7 @@ export const authOptions = {
                     )
 
                 if (!isPasswordMatched) {
-                    return null
+                    throw new Error("Invalid credentials")
                 }
 
                 if (!user.isEmailVerified) {
