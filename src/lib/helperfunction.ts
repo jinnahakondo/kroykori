@@ -2,6 +2,7 @@ type TResponse<T> = {
     success: boolean;
     message: string;
     statusCode: number;
+    error?: any;
     data?: T;
 };
 

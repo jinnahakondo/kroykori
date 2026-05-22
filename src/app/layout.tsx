@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import AuthProvider from "@/components/provider/AuthProvider";
 import { Toaster } from "sonner";
+import ReduxProvider from "@/components/provider/ReduxProvider";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -34,7 +35,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <AuthProvider>
-          {children}
+          <ReduxProvider>
+            {children}
+          </ReduxProvider>
           <Toaster />
         </AuthProvider>
       </body>
