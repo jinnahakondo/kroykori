@@ -1,4 +1,4 @@
-import VerifyEmail from '@/components/VerifyEmail';
+import VerifyEmail from '@/components/application/VerifyEmail';
 import React from 'react'
 
 export default async function VerifyEmailPage({ params }: { params: Promise<{ token: string }> }) {

@@ -14,7 +14,7 @@ import { website_register } from '@/routes/website.routes';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import { toast } from 'sonner';
+import { showErrorToast } from '@/lib/Toast';
 
 const Login = () => {
 
@@ -50,9 +50,10 @@ const Login = () => {
     const handleLoginSubmit = async (data: LoginFormValues) => {
         // console.log("Form Submitted Successfully:", data);
         const res = await signIn("credentials", { email: data.email, password: data.password, redirect: false })
-        console.log(res);
+
         if (!res?.ok) {
-            toast.error(res?.error)
+            const errorMessage = res?.error || "Login failed. Please try again."
+            showErrorToast(errorMessage)
             return;
         }
         router.push(res?.url || '/')

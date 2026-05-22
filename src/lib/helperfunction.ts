@@ -57,3 +57,8 @@ export const catchError = (error: any, customMessage?: string) => {
         ...errorObj,
     });
 };
+
+export const generateOtp = () => {
+    const otp = Math.floor(100000 + Math.random() * 900000).toString()
+    return otp;
+}

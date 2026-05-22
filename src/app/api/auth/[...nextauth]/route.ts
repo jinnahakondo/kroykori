@@ -1,4 +1,9 @@
+import { otpVerificationEmail } from "@/email/otpVerificationEmail";
 import { connectDb } from "@/lib/db.connection"
+import { generateOtp } from "@/lib/helperfunction";
+import { sendMail } from "@/lib/sendMail";
+import { sendVerificationEmail } from "@/lib/sendVerificationEmail";
+import OtpModel from "@/models/otp.model";
 import UserModel from "@/models/user.model"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -27,6 +32,16 @@ export const authOptions = {
                     throw new Error("Invalid credentials")
                 }
 
+                // checking email verification
+                if (!user.isEmailVerified) {
+                    await sendVerificationEmail({
+                        userId: String(user._id),
+                        email: user.email
+                    })
+                    throw new Error("Email not verified. A new verification email has been sent to your inbox.")
+
+                }
+
                 // compare password
                 const isPasswordMatched =
                     await user.comparePassword(
@@ -37,11 +52,8 @@ export const authOptions = {
                     throw new Error("Invalid credentials")
                 }
 
-                if (!user.isEmailVerified) {
-                    throw new Error("Please verify your email before logging in.")
-
-                }
-
+               
+                
                 // success login
                 return {
                     id: user._id.toString(),
