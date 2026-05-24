@@ -9,10 +9,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
 import { zSchema } from "@/lib/zod.schema"
+import axiosInstance from "@/lib/axios"
 
-interface VerifyOtpProps {
-  email: string
-}
 
 export function VerifyOtp({ email }: { email: string }) {
   // Infer schema types properly
@@ -20,7 +18,7 @@ export function VerifyOtp({ email }: { email: string }) {
     otp: true,
     email: true,
   })
-  
+
   type FormValues = z.infer<typeof formSchema>
 
   const {
@@ -36,7 +34,12 @@ export function VerifyOtp({ email }: { email: string }) {
   })
 
   const handleOtpVerification = async (data: FormValues) => {
-    console.log(data)
+    try {
+    
+    } catch (error) {
+
+      console.log(error)
+    }
   }
 
   return (
@@ -51,12 +54,12 @@ export function VerifyOtp({ email }: { email: string }) {
             <span className="font-semibold text-foreground break-all">{email}</span>
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent>
           <form onSubmit={handleSubmit(handleOtpVerification)} className="space-y-6">
             <div className="flex flex-col items-center justify-center space-y-4">
-              <label 
-                htmlFor="otp" 
+              <label
+                htmlFor="otp"
                 className="text-sm font-medium text-muted-foreground text-center"
               >
                 Enter the 6-digit code below to verify

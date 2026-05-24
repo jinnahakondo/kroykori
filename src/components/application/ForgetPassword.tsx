@@ -2,18 +2,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { zSchema } from '@/lib/zod.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React from 'react'
-import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '../ui/button'
+import { zSchema } from '@/lib/zod.schema'
+import { useForm } from 'react-hook-form'
+import axiosInstance from '@/lib/axios'
 
 // 1. Define the type using Zod's infer feature
 const formSchema = zSchema.pick({ email: true })
 type ForgotPasswordFormValues = z.infer<typeof formSchema>
 
 export default function ForgotPassword() {
+
     const {
         register,
         handleSubmit,
@@ -25,9 +26,17 @@ export default function ForgotPassword() {
         }
     })
 
+
     const handleSendOtp = async (data: ForgotPasswordFormValues) => {
-        console.log(data)
+        try {
+            const response = await axiosInstance.post("/api/auth/forgot-password", data)
+            console.log(response);
+            
+        } catch (error) {
+            console.log(error);
+        }
     }
+
 
     return (
         <div className='flex items-center justify-center min-h-100 w-full p-4'>

@@ -10,11 +10,12 @@ import { useForm } from "react-hook-form";
 import { zSchema } from '@/lib/zod.schema';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { website_register } from '@/routes/website.routes';
+import { website_forgot_password, website_register } from '@/routes/website.routes';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { showErrorToast } from '@/lib/Toast';
+import Link from 'next/link';
 
 const Login = () => {
 
@@ -88,12 +89,12 @@ const Login = () => {
                         <Field >
                             <div className="flex items-center">
                                 <FieldLabel htmlFor="password">Password</FieldLabel>
-                                <a
-                                    href="#"
+                                <Link
+                                    href={website_forgot_password}
                                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                                 >
                                     Forgot your password?
-                                </a>
+                                </Link>
                             </div>
                             <div className='relative'>
                                 <Input
