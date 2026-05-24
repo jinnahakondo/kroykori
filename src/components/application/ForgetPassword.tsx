@@ -8,12 +8,17 @@ import { Button } from '../ui/button'
 import { zSchema } from '@/lib/zod.schema'
 import { useForm } from 'react-hook-form'
 import axiosInstance from '@/lib/axios'
+import { showErrorToast, showSuccessToast } from '@/lib/Toast'
+import { useRouter } from 'next/navigation'
+import { website_otp_verify } from '@/routes/website.routes'
 
 // 1. Define the type using Zod's infer feature
 const formSchema = zSchema.pick({ email: true })
 type ForgotPasswordFormValues = z.infer<typeof formSchema>
 
 export default function ForgotPassword() {
+
+    const router = useRouter()
 
     const {
         register,
@@ -29,11 +34,16 @@ export default function ForgotPassword() {
 
     const handleSendOtp = async (data: ForgotPasswordFormValues) => {
         try {
-            const response = await axiosInstance.post("/api/auth/forgot-password", data)
-            console.log(response);
-            
-        } catch (error) {
-            console.log(error);
+            const res = await axiosInstance.post("/api/auth/forgot-password", data)
+            console.log(res);
+            if (res.status === 200) {
+                showSuccessToast("OTP sent to your email. Please check your inbox.")
+                router.push(`${website_otp_verify}?email=${data.email}`)
+            }
+
+        } catch (error: any) {
+            showErrorToast(error.message || "Failed to send OTP. Please try again later.")
+
         }
     }
 

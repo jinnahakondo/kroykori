@@ -10,9 +10,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
 import { zSchema } from "@/lib/zod.schema"
 import axiosInstance from "@/lib/axios"
+import { showErrorToast, showSuccessToast } from "@/lib/Toast"
+import { useRouter } from "next/navigation"
+import { website_reset_password } from "@/routes/website.routes"
 
 
 export function VerifyOtp({ email }: { email: string }) {
+
+  const router = useRouter()
+
   // Infer schema types properly
   const formSchema = zSchema.pick({
     otp: true,
@@ -35,15 +41,19 @@ export function VerifyOtp({ email }: { email: string }) {
 
   const handleOtpVerification = async (data: FormValues) => {
     try {
-    
-    } catch (error) {
+      const response = await axiosInstance.post('/api/auth/verify-otp', data)
 
-      console.log(error)
+      if (response.status === 200) {
+        showSuccessToast("Otp verification success")
+        router.push(`${website_reset_password}?email=${data.email}`)
+      }
+    } catch (error: any) {
+      showErrorToast(error.message)
     }
   }
 
   return (
-    <div className="flex items-center justify-center min-h-[400px] w-full p-4">
+    <div className="flex items-center justify-center min-h-100 w-full p-4">
       <Card className="w-full max-w-md shadow-lg border-muted/50">
         <CardHeader className="space-y-2 text-center pb-6">
           <CardTitle className="tracking-tight text-2xl font-bold">

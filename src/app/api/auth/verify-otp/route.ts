@@ -26,9 +26,9 @@ export async function POST(request: Request) {
             });
         }
 
-        const {email, otp} = validateData.data;
+        const { email, otp } = validateData.data;
 
-        const getOtpData = await OtpModel.findOne({email,otp})
+        const getOtpData = await OtpModel.findOne({ email, otp })
         if (!getOtpData) {
             return response({
                 success: false,
@@ -36,6 +36,12 @@ export async function POST(request: Request) {
                 statusCode: 404,
             });
         }
+
+        return response({
+            success: true,
+            message: "OTP verified successfully",
+            statusCode: 200,
+        })
 
 
     } catch (error: any) {
